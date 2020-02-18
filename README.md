@@ -6,7 +6,7 @@
 
 ### TCP
 
-- [All about TCP](./TCP/All_about_TCP.md)
+- [All about TCP](./Networking/TCP/All_about_TCP.md)
 
 
 ## Algorithms and data structures

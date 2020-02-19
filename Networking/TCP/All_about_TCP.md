@@ -11,14 +11,14 @@
 ![tcp-header](rsc/tcp-header.png)
 
 ## 报文头字段
--  **SrcPort: **Source port
--  **DstPort: **Destination port
--  **SequenceNum: **Sequence number of first byte
--  **Acknowledgment: **Carry information about the flow of data going in the other direction
--  **AdvetisedWindow: **Carry information about the flow of data going in the other direction
--  **Flags: **Relay control information (`SYN`, `FIN`, `RESET`, `PUSH`, `URG`, `ACK`)
--  **Checksum: **Compute
--  **Hdrlen: **Offset
+-  **SrcPort:** Source port
+-  **DstPort:** Destination port
+-  **SequenceNum:** Sequence number of first byte
+-  **Acknowledgment:** Carry information about the flow of data going in the other direction
+-  **AdvetisedWindow:** Carry information about the flow of data going in the other direction
+-  **Flags:** Relay control information (`SYN`, `FIN`, `RESET`, `PUSH`, `URG`, `ACK`)
+-  **Checksum:** Compute
+-  **Hdrlen:** Offset
 
 > 一句话总结：TCP 报文头总共包含 24 个字节：前 4个字节（`SrcPort`, `DstPort`）定义源端口和目标端口；11个字节（`SequenceNum`, `Acknowledgment` 和 `AdvertisedWindow`）用于 TCP 的 Sliding window algorithm。`Flags` 字段用于传输一些相应信息（例如建立和断开连接时用到的 `SYN`, `FIN` 和 `ACK`）。
 
@@ -29,9 +29,9 @@
 
 ## 三次握手 
 
-![Three-way handshake](rsc/Three-way handshake.png)
+![Three-way handshake](rsc/three_way_handshake.png)
 
 ## 四次挥手 
 
-![Four-way handshake](rsc/Three-way handshake.png)
+![Four-way handshake](rsc/four_way_handshake.png)
 

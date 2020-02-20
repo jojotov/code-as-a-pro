@@ -47,3 +47,12 @@
 - [iOS Memory Deep Dive - WWDC](https://developer.apple.com/videos/play/wwdc2018/416/)
 - [iOS App Performance: Memory - WWDC](https://developer.apple.com/videos/play/wwdc2012/242/)
 
+### Architecture
+
+- [浅谈 MVC、MVP 和 MVVM 架构模式](https://draveness.me/mvx)
+- [iOS应用架构](https://casatwy.com/iosying-yong-jia-gou-tan-kai-pian.html)
+
+### Database
+
+- [How Does a Database Work?](https://cstack.github.io/db_tutorial/)
+

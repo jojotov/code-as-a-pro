@@ -1,10 +1,4 @@
-
-
-# Note
-
-- TCP guarantees the reliable, in-order delivery of a stream of bytes.
-- At the heart of TCP is the sliding window algorithm
-
+[TOC]
 
 # TCP Segment
 
@@ -47,4 +41,83 @@
 ### 为什么需要四次挥手：
 
 TCP 连接的断开需要两端都进行中断，如果其中有一方关闭连接，那代表它已经没有需要传输的数据了，但它仍然可以接受数据。同时，考虑到有可能两端在同一时刻触发关闭操作，或者一方主动关闭后，另一方也立刻主动关闭，因此两端都分别需要 3 个状态转换才能进入终止状态。
+
+
+# 滑动窗口
+
+## 发送方数据
+
+![tcp_sender_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/tcp_sender_bar.png)
+
+- `LastByteAcked`：最后一个已经被**确认发送成功**的字节。通常来说，在此之前的数据都可以认为已经全部发送成功。
+- `LastByteSent`：最后一个**已经发送**的字节。通常来说它会在 `LastByteAcked` 之后或相等。`LastByteSent` 与 `LastByteAcked` 之间的数据已经发出但未得到接收方的 ACK。
+- `LastByteWritten`：最后一个**写入**的字节。通常来说它会在 `LastByteSent` 之后或相等。`LastByteWritten` 与 `LastByteSent` 之间的数据会保存到缓冲区中等待发送。
+
+它们满足以下条件：
+
+```
+LastByteAcked <= LastByteSent
+LastByteSent <= LastByteWritten
+```
+
+
+## 接收方数据
+
+![tcp_receiver_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/tcp_receiver_bar.png)
+
+- `LastByteRead`：最后一个**成功读取**的字节。通常来说，在此之前的数据都可以认为已经全部读取成功。
+- `LastByteRcvd`：最后一个**成功接收到**的字节。通常来说它会在 `LastByteRead` 之后或相等。`LastByteRcvd` 与 `LastByteRead` 之间的数据会保存到缓冲区中等待读取，且必须小于缓冲区的最大容量。
+- `NextByteExpected`：下一个**等待接收**的字节。通常来说，如果接收的数据都是按照正确顺序的话，它会是 `LastByteRcvd` 的下一个字节，但如果接收到的数据有部分是没有按顺序的话，它会是 `LastByteRead` 后第一个空数据位置。`NextByteExpected` 与 `LastByteRead` 之间的数据可以认为是全部有序且已经置入缓冲区的数据。
+
+它们满足以下条件：
+
+```
+LastByteRead < NextByteExpected
+NextByteExpected <= LastByteRcvd + 1
+
+LastByteRcvd - LastByteRead <= MaxRcvBuffer
+```
+
+
+
+## Advertised Window
+
+### 接收方
+
+由于 `NextByteExpected` 与 `LastByteRead` 之间的数据已经置入缓冲区，因此接受方需要通知发送方缓冲区所能承载的数据大小：
+
+```
+AdvertisedWindow = MaxRcvBuffer - ((NextByteExpected - 1) - LastByteRead)
+```
+
+![tcp_receiver_adbertised_window_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/tcp_receiver_adbertised_window_bar.png)
+
+
+
+### 发送方
+
+对于发送方来说，收到 `AdvertisedWindow` 后，根据当前的 `LastByteAcked` 和 `LastByteSent` 可以得出一个 `EffectiveWindow` ，这个窗口是发送方可以发送的数据大小。
+
+
+
+```
+LastByteSent - LastByteAcked <= AdvertisedWindow
+EffectiveWindow = AdvertisedWindow - (LastByteSent - LastByteAcked)
+```
+
+> 注意：EffectiveWindow 必须大于 0 
+
+![effective_window_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/effective_window_bar.png)
+
+同时，发送方也具有一个缓冲区来保存已经写入发送程序但还没有发送成功的数据，因此下一次尝试写入的数据 y 必须保证可以填入缓冲区
+
+
+
+
+```
+LastByteWritten - LastByteAcked <= MaxSendBuffer
+y < MaxSendBuffer - (LastByteWritten - LastByteAcked)
+```
+
+![sliding_window_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/sliding_window_bar.png)
 

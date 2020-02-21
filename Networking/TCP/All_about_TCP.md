@@ -120,3 +120,5 @@ y < MaxSendBuffer - (LastByteWritten - LastByteAcked)
 
 ![sliding_window_bar](/Users/jojo/Desktop/code-as-a-pro/Networking/TCP/rsc/sliding_window_bar.png)
 
+# 重传机制（Retransmission）
+

@@ -142,3 +142,88 @@ TimeOut = 2 x EstimatedRTT
 
 Karn 的解决方法是：**当重传触发时，停止计算 EstimatedRTT，并且 SampleRTT 仅使用只发送了一次的数据来计算。**
 
+
+
+# 拥塞避免 Congestion Control
+
+## CongestionWindow 的增长与减少
+
+- `CongestionWindow` 的增长速度和 1 个 packet 的大小有关。
+- `CongestionWindow` 的减少通常为直接减半
+
+### 线性增长
+
+` CongestionWindow` 的值随着时间线性增长，每次增长 1 个 packet 大小。
+
+### Slow start
+
+Slow start 的增长通常有 2 种情况：
+
+- 在每个 ACK 后，`CongestionWindow` 的值翻倍增长直到达到 `CongestionThreshold`（通常 在 Timeout 发生后，此时已经具有一个之前 的 `CongestionThreshold` 值）
+- 在每个 RTT 中，`CongestionWindow` 的值翻倍增长直到 出现丢包或 timeout（通常在连接开始的初期，没有任何关于网络状况的信息时）
+- 
+
+## Timeout 发生
+
+![tcp_congestion_window_chart](rsc/tcp_congestion_window_chart.png)
+
+- `CongestionThreshold`：当 timeout 发生时，congestion window 的值会减少一半，CongestionThreshold 会设置为这个值。
+- `CongestionWindow` 会重置为 1 个 packet 的大小，然后开始 slow start
+- 当 `CongestionWindow` 达到 `CongestionThreshold` 的值后，开始线性增长
+
+
+
+## 测试题
+
+> 假设当以下情况发生时，某个 TCP 连接的 congestion window 大小为 32 KB：
+>
+> - Timout
+> - 接收到 3 个 `ACK`
+>
+> 且这个连接的 RTT = 100 ms，MSS = 2 KB，那么此连接的 congestion window 大小回到 32 KB 所需要的时间约为 __ 和 __ 之间。
+
+第一种 Timeout 的情况， congestion window 的大小会直接缩减至最小，即为 1 个 packet 的大小，也就是 2 KB。
+
+此时，congestion window 会在每次 ACK 后翻倍，直到达到 congestion threshold 也就是 16 KB。然后开始线性增长，即每个 ACK 增长 1 个 packet 的大小：
+
+|                Congestion window size (KB)             |      ACKs |
+| --------------------------- | ---- |
+| 2                           | 1    |
+| 4                           | 2    |
+| 8                           | 3    |
+| 16 (Congestion threshold)   | 4    |
+| 18                          | 5    |
+| 20                          | 6    |
+| 22                          | 7    |
+| 24                          | 8    |
+| 26                          | 9    |
+| 28                          | 10   |
+| 30                          | 11   |
+| 32                          | 12   |
+
+因此，所需时间为 
+
+$$
+12 * 100 ms = 1200 ms
+$$
+
+第二种情况，当收到 3 个 ACK 后，此时 Congestion Window 为 8 KB：
+
+|                Congestion window size (KB)             |      ACKs |
+| --------------------------- | ---- |
+| 16 (Congestion threshold)   | 1    |
+| 18                          | 2    |
+| 20                          | 3    |
+| 22                          | 4    |
+| 24                          | 5    |
+| 26                          | 6    |
+| 28                          | 7   |
+| 30                          | 8   |
+| 32                          | 9   |
+
+因此，所需时间为 
+
+$$
+9 * 100 ms = 900 ms
+$$
+

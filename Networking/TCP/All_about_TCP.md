@@ -46,7 +46,7 @@ TCP 连接的断开需要两端都进行中断，如果其中有一方关闭连�
 
 ## 发送方数据
 
-![tcp_sender_bar](/rsc/tcp_sender_bar.png)
+![tcp_sender_bar](rsc/tcp_sender_bar.png)
 
 - `LastByteAcked`：最后一个已经被**确认发送成功**的字节。通常来说，在此之前的数据都可以认为已经全部发送成功。
 - `LastByteSent`：最后一个**已经发送**的字节。通常来说它会在 `LastByteAcked` 之后或相等。`LastByteSent` 与 `LastByteAcked` 之间的数据已经发出但未得到接收方的 ACK。
@@ -62,7 +62,7 @@ LastByteSent <= LastByteWritten
 
 ## 接收方数据
 
-![tcp_receiver_bar](/rsc/tcp_receiver_bar.png)
+![tcp_receiver_bar](rsc/tcp_receiver_bar.png)
 
 - `LastByteRead`：最后一个**成功读取**的字节。通常来说，在此之前的数据都可以认为已经全部读取成功。
 - `LastByteRcvd`：最后一个**成功接收到**的字节。通常来说它会在 `LastByteRead` 之后或相等。`LastByteRcvd` 与 `LastByteRead` 之间的数据会保存到缓冲区中等待读取，且必须小于缓冲区的最大容量。
@@ -89,7 +89,7 @@ LastByteRcvd - LastByteRead <= MaxRcvBuffer
 AdvertisedWindow = MaxRcvBuffer - ((NextByteExpected - 1) - LastByteRead)
 ```
 
-![tcp_receiver_adbertised_window_bar](/rsc/tcp_receiver_adbertised_window_bar.png)
+![tcp_receiver_adbertised_window_bar](rsc/tcp_receiver_adbertised_window_bar.png)
 
 
 
@@ -106,7 +106,7 @@ EffectiveWindow = AdvertisedWindow - (LastByteSent - LastByteAcked)
 
 > 注意：EffectiveWindow 必须大于 0 
 
-![effective_window_bar](/rsc/effective_window_bar.png)
+![effective_window_bar](rsc/effective_window_bar.png)
 
 同时，发送方也具有一个缓冲区来保存已经写入发送程序但还没有发送成功的数据，因此下一次尝试写入的数据 y 必须保证可以填入缓冲区
 
@@ -118,7 +118,7 @@ LastByteWritten - LastByteAcked <= MaxSendBuffer
 y < MaxSendBuffer - (LastByteWritten - LastByteAcked)
 ```
 
-![sliding_window_bar](/rsc/sliding_window_bar.png)
+![sliding_window_bar](rsc/sliding_window_bar.png)
 
 # 重传机制（Retransmission）
 

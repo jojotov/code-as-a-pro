@@ -122,3 +122,23 @@ y < MaxSendBuffer - (LastByteWritten - LastByteAcked)
 
 # 重传机制（Retransmission）
 
+由于 TCP 是可靠的传输协议，因此当发送方没有在某个时间内收到接收方发送的 ACK，发送方会尝试重新传输上一次的数据。这个超时时间为 `EstimatedRTT` 的 2 倍，它是由以下公式计算得出：
+
+
+
+```
+EstimatedRTT = alpha x EstimatedRTT + (1 - alpha) x SampleRTT
+TimeOut = 2 x EstimatedRTT
+
+```
+
+> 注意：公式右边的 EstimatedRTT 为上一次计算得出的结果；SampleRTT 为上一次发送的时间和最近一次接收到 ACK 的时间差；alpha 通常为 0.8-0.9，其作用主要是用于调整 EstimatedRTT
+
+
+
+## Karn/Partridge 算法
+
+由于普通的重传算法有一个致命的问题：如果接收方的 ACK 延迟，且发送方已经触发了重传后才接收到 ACK，那么下一次计算的 EstimatedRTT 会出现错误。
+
+Karn 的解决方法是：**当重传触发时，停止计算 EstimatedRTT，并且 SampleRTT 仅使用只发送了一次的数据来计算。**
+

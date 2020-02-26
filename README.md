@@ -22,12 +22,22 @@
 
 ### Block
 
+- [Blocks](https://www.notion.so/jojotov/Blocks-baa55e541934412eb2b17793ebe8cc9d)
+
+#### 参考
+
 - [Working with Blocks - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html)
 - [Block Programming Topics - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Blocks/Articles/00_Introduction.html#//apple_ref/doc/uid/TP40007502)
 - [Block Implementation Specification - Clang 11 documentation](http://clang.llvm.org/docs/Block-ABI-Apple.html)
 - [Pratical Blocks - Mike Ash](https://www.mikeash.com/pyblog/friday-qa-2009-08-14-practical-blocks.html)
 
 ### Concurrency
+
+- [Concurrency](https://www.notion.so/jojotov/Concurrency-9f56e95b4b0d40f6a8a3df9564e2cdc0)
+- [GCD](https://www.notion.so/jojotov/Grand-Central-Dispatch-GCD-70b0c6580eb64ee6a5527dc317c6e94d)
+
+
+#### 参考
 
 - [Synchronization - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html#//apple_ref/doc/uid/10000057i-CH8-SW1)
 - [Conditional Variable vs Semaphore - stackoverflow.com](https://stackoverflow.com/questions/3513045/conditional-variable-vs-semaphore)
@@ -41,12 +51,24 @@
 - [深入理解 GCD](https://bestswifter.com/deep-gcd/)
 - [深入浅出GCD](https://xiaozhuanlan.com/Grand-Central-Dispatch)
 
+### Runtime
+
+- [Objective-C Runtime 解析（1） —— 从一个类开始](https://www.notion.so/jojotov/Objective-C-Runtime-1-88327ca254664f7ba4cff073ab3e48f3)
+
 ### Runloops
+
+#### 参考
+
 - [Run Loops - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW20)
 - [解密 Runloop](http://mrpeak.cn/blog/ios-runloop/)
 - [深入理解RunLoop](https://blog.ibireme.com/2015/05/18/runloop/)
 
 ### Memory
+
+- [ARC](https://www.notion.so/jojotov/ARC-14725d1a806f43638359c56bc8854fa8)
+
+#### 参考
+
 - [Automatic Reference Counting - Clang 11 documentation](http://clang.llvm.org/docs/AutomaticReferenceCounting.html)
 - [iOS Memory Deep Dive - WWDC](https://developer.apple.com/videos/play/wwdc2018/416/)
 - [iOS App Performance: Memory - WWDC](https://developer.apple.com/videos/play/wwdc2012/242/)

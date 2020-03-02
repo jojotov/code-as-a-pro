@@ -22,6 +22,12 @@
 
 ## 三次握手 
 
+### 三次握手步骤
+
+1. 客户端发起连接请求，发送一个特定的 segment 给服务端，其中 `SYN` 字段设置为 1，这个 segment 称为 SYN segment。同时，客户端随机选择一个序列数字设置到 `sequenceNumber` 字段，此变量称为 `client_isn`。
+2. 服务端接收到客户端的连接请求，进行一系列初始化操作之后，发送确认连接的 segment 给客户端，此 segment 中 `SYN` 字段同样为 1，同时，`acknowledgment` 字段设置为 `clien_isn + 1`。同样，服务端也会选择一个随机数字作为 `server_isn`。
+3. 客户端接收到服务端的 SYNACK segment，同时进行一系列初始化操作，最后发送一个确认连接的 segment 给服务端，此 segment 中的 `acknowledgement` 字段为 `server_isn + 1`。需要注意，在此步骤中，客户端可以在 payload 中携带数据。
+
 ![Three-way handshake](rsc/three_way_handshake.png)
 
 ### 为什么需要三次握手：
@@ -32,6 +38,30 @@
 
 > 注意：
 > 如果客户端向服务端发出的 `ACK`，即第三次握手发送失败了，那客户端依然会成功进入 ESTABNLISHED 状态，也就是说本地应用可以正常传输数据。这些传输的数据都会带有一个 `ACK` 标识，以及正确的 `Acknowledgment` 信息，所以服务端在接收到这些数据后仍然可以正确建连接。
+
+### 三次握手的优化
+
+#### SYN cookies
+假设客户端同时发送大量的 SYN 请求给服务端，但最终并不完成这一次连接建立，服务端会不断地初始化资源并释放，造成巨大的不必要性能损耗，这种攻击称之为 Denial of Service (DoS) 攻击。这也是 TCP 三次握手的部分缺陷造成。
+
+SYN cookies 的优化便解决了这种问题：
+
+1. 当服务端接收到一个 SYN 请求时，它并不能确定这是一个有效的请求还是一次攻击中的请求。此时，服务端通过一个 hash 算法（通过 IP 地址和端口信息等）得出初始的 sequence number，这个数字会被当作“cookie”。然后服务端回复包含此 sequence number 的 SYNACK segment。
+2. 一个合法的客户端在收到此 SYNACK segment 后，会回复 ACK segment。当服务端收到此 ACK，它会通过一样的 hash 算法得出之前的 sequence number（因为此数字不会保存在内存中），并与客户端回复的 acknowledge 值进行对比来验证。
+3. 如果客户端没有回复 ACK segment，那么这次 SYN 请求并不会对服务端产生任何影响（没有资源消耗）。
+
+#### TFO（TCP Fast Open）
+
+TCP 快速打开策略是用于简化 TCP 握手步骤的策略。服务端会通过握手开始的 SYN segment 中的 TFO cookie 来验证一个客户端是否曾经连接过，验证成功的话，服务端可以在最后一次 ACK 收到之前开始传输数据。
+
+1. 客户端发送包含 TFO 的 SYN segment，此时 cookie 为空，即首次请求 cookie。
+2. 服务端生产加密的 cookie，并在 SYNACK segment 中返回给客户端。
+3. 客户端缓存 cookie，并在下次请求时包含此 cookie。
+4. 服务端对 cookie 进行校验，如果有效，则会在 SYNACK segment 中直接返回请求数据，否则只会发送 SYNACK segment 进行确认。
+5. 重复此过程直至 cookie 失效。
+
+
+
 
 ## 四次挥手 
 
